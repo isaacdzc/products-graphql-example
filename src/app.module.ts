@@ -15,6 +15,19 @@ import { MongooseModule } from '@nestjs/mongoose';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       playground: true,
+      formatError: (error: any) => {
+        const originalError = error.extensions?.originalError as any;
+        const validationMessages = originalError?.message;
+        const formattedMessage = Array.isArray(validationMessages)
+          ? `Validation failed: ${validationMessages.join(', ')}`
+          : originalError?.message || error.message;
+        return {
+          message: formattedMessage,
+          code: originalError?.error?.toUpperCase().replace(' ', '_') || error.extensions?.code || 'BAD_REQUEST',
+          status: originalError?.statusCode || error.extensions?.status || 400,
+          path: error.path,
+        };
+      },
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
