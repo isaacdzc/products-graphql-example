@@ -1,5 +1,5 @@
 import { InputType, Field, Float } from '@nestjs/graphql';
-import { MinLength, IsPositive, IsNotEmpty } from 'class-validator'; // Importamos validadores
+import { MinLength, IsPositive, IsNotEmpty } from 'class-validator';
 
 @InputType()
 export class CreateProductInput {
